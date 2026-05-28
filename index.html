@@ -1,0 +1,1455 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy birthday, my love</title>
+
+    <!-- Fonts: elegant fantasy / letter feeling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-deep: #07100c;
+        --bg-forest: #0d1f17;
+        --forest: #1f3a2e;
+        --forest-soft: #2f4f3c;
+        --gold: #c9a646;
+        --gold-bright: #f6e3a1;
+        --parchment: #ead9b8;
+        --parchment-deep: #d2b982;
+        --brown: #5a3d24;
+        --ink: #2a1d12;
+        --soft-light: #fff4cf;
+        --shadow: rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        width: 100%;
+        height: 100%;
+        scroll-behavior: smooth;
+        overflow: hidden;
+      }
+
+      body {
+        width: 100%;
+        height: 100%;
+        min-height: 100svh;
+        background: var(--bg-deep);
+        color: var(--soft-light);
+        font-family: "Cormorant Garamond", serif;
+        overflow: hidden;
+      }
+
+      body.letter-open,
+      body.letter-open html {
+        overflow-y: auto;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .page {
+        height: 100svh;
+        min-height: 100svh;
+        overflow: hidden;
+        position: relative;
+        background:
+          radial-gradient(
+            circle at 50% 20%,
+            rgba(246, 227, 161, 0.09),
+            transparent 26rem
+          ),
+          radial-gradient(circle at 15% 85%, #2f4f3ca6, transparent 25rem),
+          linear-gradient(135deg, #050806 0%, #0c1811 45%, #10180f 100%);
+      }
+
+      body.letter-open .page {
+        height: auto;
+        min-height: 100svh;
+        overflow: visible;
+      }
+
+      /* ========== INTRO WINDOW ========== */
+      .intro-window {
+        height: 100svh;
+        min-height: 100svh;
+        width: 100%;
+        display: grid;
+        place-items: center;
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background:
+          radial-gradient(
+            circle at center,
+            rgba(246, 227, 161, 0.08),
+            transparent 32rem
+          ),
+          linear-gradient(160deg, #020403 0%, #08120d 50%, #010201 100%);
+        transition:
+          opacity 1.2s ease,
+          visibility 1.2s ease;
+        overflow: hidden;
+      }
+
+      .intro-window.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .intro-particles,
+      .song-particles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .particle {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: var(--size);
+        height: var(--size);
+        opacity: var(--opacity);
+        animation: floatParticle var(--duration) ease-in-out infinite;
+        animation-delay: var(--delay);
+        filter: blur(var(--blur));
+      }
+
+      .particle.star {
+        border-radius: 50%;
+        background: rgba(255, 244, 207, 0.95);
+        box-shadow:
+          0 0 8px rgba(255, 244, 207, 0.7),
+          0 0 18px rgba(201, 166, 70, 0.28);
+      }
+
+      .particle.heart {
+        width: calc(var(--size) * 1.25);
+        height: calc(var(--size) * 1.25);
+        background: rgba(246, 227, 161, 0.72);
+        transform: rotate(45deg);
+        border-radius: 4px 4px 0 4px;
+        box-shadow: 0 0 14px rgba(246, 227, 161, 0.25);
+      }
+
+      .particle.heart::before,
+      .particle.heart::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: inherit;
+      }
+
+      .particle.heart::before {
+        left: -50%;
+        top: 0;
+      }
+
+      .particle.heart::after {
+        left: 0;
+        top: -50%;
+      }
+
+      @keyframes floatParticle {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) rotate(var(--rotate));
+        }
+        50% {
+          transform: translate3d(var(--drift-x), var(--drift-y), 0)
+            rotate(calc(var(--rotate) + 18deg));
+        }
+      }
+
+      .window-frame-wrap {
+        width: min(88vw, 520px);
+        max-height: calc(100svh - 2rem);
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .intro-caption {
+        margin-bottom: clamp(0.7rem, 2vh, 1.6rem);
+        font-family: "Cinzel", serif;
+        font-size: clamp(1rem, 2.8vw, 1.4rem);
+        letter-spacing: 0.08em;
+        color: rgba(255, 244, 207, 0.86);
+        text-shadow: 0 0 18px rgba(246, 227, 161, 0.18);
+      }
+
+      .window-frame {
+        position: relative;
+        height: clamp(260px, 54svh, 460px);
+        min-height: 0;
+        border: 12px solid #4b321f;
+        border-radius: 220px 220px 24px 24px;
+        background:
+          radial-gradient(
+            circle at 50% 30%,
+            rgba(246, 227, 161, 0.18),
+            transparent 12rem
+          ),
+          linear-gradient(180deg, #09150f 0%, #060908 100%);
+        box-shadow:
+          0 28px 80px var(--shadow),
+          inset 0 0 0 2px rgba(246, 227, 161, 0.22),
+          inset 0 0 36px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .window-frame::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 10px;
+        height: 100%;
+        background: #4b321f;
+        transform: translateX(-50%);
+        z-index: 4;
+        box-shadow: 0 0 0 1px rgba(246, 227, 161, 0.15);
+      }
+
+      .window-frame::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 48%;
+        width: 100%;
+        height: 10px;
+        background: #4b321f;
+        z-index: 4;
+        box-shadow: 0 0 0 1px rgba(246, 227, 161, 0.15);
+      }
+
+      .window-view {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(246, 227, 161, 0.6),
+            transparent 5rem
+          ),
+          radial-gradient(
+            circle at 50% 35%,
+            rgba(201, 166, 70, 0.18),
+            transparent 13rem
+          ),
+          linear-gradient(180deg, #102318 0%, #05100b 100%);
+        opacity: 0.45;
+      }
+
+      .moon-light {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        left: 50%;
+        top: 18%;
+        transform: translateX(-50%);
+        background: radial-gradient(
+          circle,
+          #fff4cf 0%,
+          rgba(246, 227, 161, 0.35) 42%,
+          transparent 70%
+        );
+        filter: blur(1px);
+        opacity: 0.6;
+      }
+
+      .window-door {
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 25%),
+          linear-gradient(180deg, #533722 0%, #2d1c12 100%);
+        z-index: 5;
+        transition: transform 1.7s cubic-bezier(0.68, -0.35, 0.25, 1.25);
+        box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.35);
+      }
+
+      .window-door.left {
+        left: 0;
+        transform-origin: left center;
+        border-right: 1px solid rgba(246, 227, 161, 0.18);
+      }
+
+      .window-door.right {
+        right: 0;
+        transform-origin: right center;
+        border-left: 1px solid rgba(246, 227, 161, 0.18);
+      }
+
+      .intro-window.open .window-door.left {
+        transform: perspective(800px) rotateY(-105deg);
+      }
+
+      .intro-window.open .window-door.right {
+        transform: perspective(800px) rotateY(105deg);
+      }
+
+      .window-handle {
+        position: absolute;
+        z-index: 8;
+        left: 50%;
+        top: 54%;
+        transform: translate(-50%, -50%);
+        width: 74px;
+        height: 74px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 244, 207, 0.55);
+        background: radial-gradient(
+          circle at 35% 30%,
+          #fff4cf 0%,
+          #f6e3a1 24%,
+          #c9a646 58%,
+          #6d4f18 100%
+        );
+        color: #241608;
+        cursor: pointer;
+        box-shadow:
+          0 0 25px rgba(246, 227, 161, 0.45),
+          0 10px 24px rgba(0, 0, 0, 0.38);
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      .window-handle:hover {
+        transform: translate(-50%, -50%) scale(1.07);
+        box-shadow:
+          0 0 34px rgba(246, 227, 161, 0.7),
+          0 10px 28px rgba(0, 0, 0, 0.45);
+      }
+
+      .window-handle span {
+        display: block;
+        font-family: "Cinzel", serif;
+        font-size: 1.55rem;
+        line-height: 1;
+      }
+
+      .start-hint {
+        margin-top: clamp(0.65rem, 2vh, 1.4rem);
+        color: rgba(255, 244, 207, 0.72);
+        font-size: 1.15rem;
+        letter-spacing: 0.04em;
+      }
+
+      .intro-window.open .window-handle,
+      .intro-window.open .start-hint {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.45s ease;
+      }
+
+      /* ========== SONG SCENE ========== */
+      .song-scene {
+        height: 100svh;
+        min-height: 100svh;
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        pointer-events: none;
+        display: grid;
+        place-items: center;
+        padding: clamp(0.75rem, 2.5vh, 2rem);
+        opacity: 0;
+        transform: scale(1.015);
+        transition:
+          opacity 1.5s ease,
+          transform 1.5s ease;
+        overflow: hidden;
+      }
+
+      .song-scene.visible {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+      }
+
+      .song-scene.hidden-scene {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .forest-bg {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(246, 227, 161, 0.17),
+            transparent 15rem
+          ),
+          radial-gradient(
+            circle at 18% 80%,
+            rgba(47, 79, 60, 0.6),
+            transparent 22rem
+          ),
+          linear-gradient(180deg, #07100c 0%, #102318 52%, #040806 100%);
+        z-index: 0;
+      }
+
+      .forest-silhouette {
+        display: none;
+      }
+
+      .gold-mist {
+        position: absolute;
+        width: 46rem;
+        height: 46rem;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(246, 227, 161, 0.14),
+          transparent 62%
+        );
+        top: 7%;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(2px);
+        z-index: 1;
+        animation: breathe 5s ease-in-out infinite;
+      }
+
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.45;
+          transform: translateX(-50%) scale(0.96);
+        }
+        50% {
+          opacity: 0.75;
+          transform: translateX(-50%) scale(1.04);
+        }
+      }
+
+      .song-card {
+        position: relative;
+        z-index: 3;
+        width: min(92vw, 900px);
+        height: min(430px, calc(100svh - 2rem));
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        align-items: center;
+        text-align: center;
+        padding: clamp(2rem, 6vw, 4.5rem);
+        border: 1px solid rgba(201, 166, 70, 0.42);
+        border-radius: 28px;
+        background:
+          linear-gradient(180deg, rgba(9, 18, 13, 0.54), rgba(7, 16, 12, 0.72)),
+          radial-gradient(
+            circle at top,
+            rgba(246, 227, 161, 0.08),
+            transparent 22rem
+          );
+        backdrop-filter: blur(10px);
+        box-shadow:
+          0 30px 90px rgba(0, 0, 0, 0.48),
+          inset 0 0 60px rgba(201, 166, 70, 0.05);
+      }
+
+      .song-intro {
+        position: static;
+        transform: none;
+        width: 100%;
+        align-self: start;
+        font-family: "Cinzel", serif;
+        font-size: clamp(0.72rem, 1.8vw, 0.92rem);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 244, 207, 0.58);
+      }
+
+      .lyric-wrapper {
+        width: 100%;
+        min-height: 0;
+        height: auto;
+        display: grid;
+        place-items: center;
+        align-self: center;
+        grid-row: 2;
+        transform: translateY(0);
+      }
+
+      .lyric-line {
+        display: none;
+        width: 100%;
+      }
+
+      .lyric-wrapper.waiting .lyric-line,
+      .lyric-wrapper.waiting .lyric-line.active {
+        display: none !important;
+      }
+
+      .lyric-line.active {
+        display: block;
+      }
+
+      .spanish-line {
+        font-family: "Cinzel", serif;
+        font-size: clamp(1.65rem, 5vw, 3.5rem);
+        line-height: 1.18;
+        color: var(--gold-bright);
+        letter-spacing: 0.045em;
+        text-align: center;
+        text-shadow:
+          0 0 20px rgba(246, 227, 161, 0.25),
+          0 2px 18px rgba(0, 0, 0, 0.45);
+      }
+
+      .english-line {
+        margin-top: 1rem;
+        font-size: clamp(1.15rem, 2.6vw, 1.85rem);
+        line-height: 1.35;
+        color: rgba(255, 244, 207, 0.82);
+        font-weight: 300;
+        letter-spacing: 0.035em;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 1.25s ease,
+          transform 1.25s ease;
+      }
+
+      .lyric-line.active .english-line.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .song-controls {
+        position: static;
+        transform: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+        width: 100%;
+        align-self: end;
+      }
+
+      .volume-control {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        border: 1px solid rgba(201, 166, 70, 0.42);
+        background: rgba(7, 16, 12, 0.5);
+        color: rgba(255, 244, 207, 0.82);
+        border-radius: 999px;
+        padding: 0.62rem 0.9rem;
+        font-size: 1rem;
+      }
+
+      .volume-control span {
+        font-family: "Cinzel", serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .volume-control input {
+        width: 96px;
+        accent-color: var(--gold-bright);
+      }
+
+      .small-control,
+      .letter-btn {
+        border: 1px solid rgba(201, 166, 70, 0.56);
+        background: rgba(7, 16, 12, 0.62);
+        color: var(--soft-light);
+        border-radius: 999px;
+        padding: 0.7rem 1.05rem;
+        cursor: pointer;
+        transition:
+          transform 0.25s ease,
+          background 0.25s ease,
+          border-color 0.25s ease;
+      }
+
+      .small-control:hover,
+      .letter-btn:hover {
+        transform: translateY(-2px);
+        background: rgba(201, 166, 70, 0.17);
+        border-color: rgba(246, 227, 161, 0.82);
+      }
+
+      .letter-btn {
+        display: none;
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .letter-btn.visible {
+        display: inline-flex;
+      }
+
+      /* ========== LETTER ========== */
+      .letter-section {
+        position: relative;
+        z-index: 30;
+        min-height: 100svh;
+        padding: clamp(3rem, 8vw, 6rem) 1.4rem;
+        background:
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(246, 227, 161, 0.12),
+            transparent 24rem
+          ),
+          linear-gradient(180deg, #07100c 0%, #10180f 100%);
+        display: none;
+      }
+
+      .letter-section.visible {
+        display: block;
+        min-height: 100svh;
+        animation: revealLetterSection 1.2s ease both;
+      }
+
+      @keyframes revealLetterSection {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .letter-paper {
+        width: min(94vw, 850px);
+        margin: 0 auto;
+        padding: clamp(2rem, 6vw, 4.8rem);
+        color: var(--ink);
+        border-radius: 18px;
+        border: 1px solid rgba(90, 61, 36, 0.42);
+        background:
+          radial-gradient(
+            circle at 20% 15%,
+            rgba(255, 255, 255, 0.26),
+            transparent 18rem
+          ),
+          linear-gradient(
+            135deg,
+            rgba(234, 217, 184, 0.98),
+            rgba(210, 185, 130, 0.96)
+          );
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .letter-paper::before,
+      .letter-paper::after {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border: 1px solid rgba(90, 61, 36, 0.24);
+        border-radius: 12px;
+        pointer-events: none;
+      }
+
+      .letter-title {
+        position: relative;
+        font-family: "Cinzel", serif;
+        font-size: clamp(1.75rem, 5vw, 3.2rem);
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #392413;
+        letter-spacing: 0.04em;
+      }
+
+      .letter-body {
+        position: relative;
+        font-size: clamp(1.15rem, 2.4vw, 1.35rem);
+        line-height: 1.8;
+        color: #2a1d12;
+      }
+
+      .letter-body p + p {
+        margin-top: 1.35rem;
+      }
+
+      .signature {
+        margin-top: 2.4rem;
+        text-align: right;
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.04em;
+      }
+
+      .playlist-surprise {
+        margin: 3rem auto 0;
+        padding: clamp(1.4rem, 4vw, 2rem);
+        max-width: 460px;
+        text-align: center;
+        border: 1px solid rgba(90, 61, 36, 0.24);
+        border-radius: 22px;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(255, 244, 207, 0.32),
+            transparent 14rem
+          ),
+          rgba(255, 244, 207, 0.18);
+        box-shadow: inset 0 0 35px rgba(90, 61, 36, 0.08);
+      }
+
+      .playlist-kicker {
+        font-family: "Cinzel", serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(42, 29, 18, 0.68);
+        margin-bottom: 0.45rem !important;
+      }
+
+      .playlist-surprise h2 {
+        font-family: "Cinzel", serif;
+        font-size: clamp(1.35rem, 4vw, 2rem);
+        color: #392413;
+        margin-bottom: 0.7rem;
+      }
+
+      .playlist-surprise p {
+        font-size: clamp(1rem, 2.2vw, 1.15rem);
+        line-height: 1.55;
+        margin-top: 0;
+      }
+
+      .qr-frame {
+        display: grid;
+        place-items: center;
+        width: min(230px, 72vw);
+        aspect-ratio: 1 / 1;
+        margin: 1.4rem auto 1rem;
+        padding: 0.75rem;
+        border-radius: 20px;
+        background: #fff8e5;
+        border: 1px solid rgba(90, 61, 36, 0.28);
+        box-shadow:
+          0 16px 35px rgba(90, 61, 36, 0.18),
+          inset 0 0 0 4px rgba(201, 166, 70, 0.12);
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      .qr-frame:hover {
+        transform: translateY(-3px) scale(1.015);
+        box-shadow:
+          0 20px 42px rgba(90, 61, 36, 0.24),
+          inset 0 0 0 4px rgba(201, 166, 70, 0.18);
+      }
+
+      .qr-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 12px;
+        image-rendering: crisp-edges;
+      }
+
+      .playlist-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.3rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 999px;
+        border: 1px solid rgba(90, 61, 36, 0.38);
+        background: rgba(57, 36, 19, 0.9);
+        color: var(--soft-light);
+        font-family: "Cinzel", serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition:
+          transform 0.25s ease,
+          background 0.25s ease;
+      }
+
+      .playlist-button:hover {
+        transform: translateY(-2px);
+        background: rgba(90, 61, 36, 0.96);
+      }
+
+      .audio-note {
+        position: fixed;
+        left: 1rem;
+        bottom: 1rem;
+        z-index: 50;
+        max-width: 280px;
+        padding: 0.75rem 0.9rem;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.55);
+        color: rgba(255, 244, 207, 0.86);
+        font-size: 0.95rem;
+        display: none;
+        border: 1px solid rgba(201, 166, 70, 0.35);
+      }
+
+      .audio-note.visible {
+        display: block;
+      }
+
+      @media (max-width: 620px) {
+        .intro-window {
+          padding: 1rem;
+        }
+
+        .intro-caption {
+          margin-bottom: 1rem;
+        }
+
+        .song-scene {
+          padding: 1rem;
+        }
+
+        .song-card {
+          height: calc(100svh - 2rem);
+          min-height: 0;
+          padding: 1.2rem 1rem 1.2rem;
+          border-radius: 22px;
+        }
+
+        .window-frame {
+          height: clamp(240px, 50svh, 400px);
+        }
+
+        .window-handle {
+          width: 62px;
+          height: 62px;
+        }
+
+        .song-controls {
+          width: 100%;
+          gap: 0.55rem;
+        }
+
+        .small-control,
+        .letter-btn {
+          padding: 0.62rem 0.82rem;
+          font-size: 0.95rem;
+        }
+
+        .volume-control {
+          width: 100%;
+          justify-content: center;
+          padding: 0.55rem 0.75rem;
+        }
+
+        .volume-control input {
+          width: min(180px, 44vw);
+        }
+
+        .letter-paper {
+          padding: 2.2rem 1.4rem;
+        }
+      }
+
+      @media (max-height: 680px) {
+        .intro-caption,
+        .start-hint {
+          font-size: 0.95rem;
+        }
+
+        .window-frame {
+          height: clamp(250px, 52svh, 380px);
+        }
+
+        .song-card {
+          height: calc(100svh - 1.5rem);
+          min-height: 0;
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+        }
+
+        .spanish-line {
+          font-size: clamp(1.35rem, 6vw, 2.8rem);
+        }
+
+        .english-line {
+          font-size: clamp(1rem, 4vw, 1.45rem);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <!-- Replace the src with your own audio file path. Example: assets/las-mananitas.mp3 -->
+      <audio
+        id="birthdaySong"
+        src="assets/las-mananitas.mp3"
+        preload="auto"
+      ></audio>
+      <audio
+        id="letterSong"
+        src="assets/theladyinmylife.mp3"
+        preload="auto"
+        loop
+      ></audio>
+
+      <section
+        class="intro-window"
+        id="introWindow"
+        aria-label="Birthday introduction"
+      >
+        <div
+          class="intro-particles"
+          id="introParticles"
+          aria-hidden="true"
+        ></div>
+
+        <div class="window-frame-wrap">
+          <p class="intro-caption">A birthday song is waiting for you</p>
+
+          <div class="window-frame" aria-hidden="true">
+            <div class="window-view"></div>
+            <div class="moon-light"></div>
+            <div class="window-door left"></div>
+            <div class="window-door right"></div>
+            <button
+              class="window-handle"
+              id="startExperience"
+              type="button"
+              aria-label="Open the window and start the birthday song"
+            >
+              <span>✦</span>
+            </button>
+          </div>
+
+          <p class="start-hint">Click the handle to begin.</p>
+        </div>
+      </section>
+
+      <section
+        class="song-scene"
+        id="songScene"
+        aria-label="Birthday song lyrics"
+      >
+        <div class="forest-bg"></div>
+        <div class="song-particles" id="songParticles" aria-hidden="true"></div>
+        <div class="gold-mist"></div>
+        <div class="forest-silhouette"></div>
+
+        <article class="song-card">
+          <p class="song-intro">
+            A little piece of my home, translated for your heart
+          </p>
+
+          <div class="lyric-wrapper" id="lyricWrapper">
+            <div class="lyric-line" data-start="0">
+              <p class="spanish-line"></p>
+              <p class="english-line"></p>
+            </div>
+
+            <div class="lyric-line" data-start="9">
+              <p class="spanish-line">
+                Estas son las mañanitas que cantaba el Rey David
+              </p>
+              <p class="english-line">
+                This is the morning song once sung by King David
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="16">
+              <p class="spanish-line">
+                Hoy por ser día de tu santo te las cantamos aquí
+              </p>
+              <p class="english-line">
+                Today, on your saint's day, we sing this song here for you
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="24">
+              <p class="spanish-line">
+                Despierta, mi bien despierta, mira que ya amaneció
+              </p>
+              <p class="english-line">
+                Wake up, my love, wake up, the morning light has come.
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="34">
+              <p class="spanish-line">
+                Ya los pajaritos cantan, la luna ya se metió
+              </p>
+              <p class="english-line">
+                The little birds are singing now, the moon has gone to rest
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="45">
+              <p class="spanish-line">
+                Qué linda está la mañana en que vengo a saludarte
+              </p>
+              <p class="english-line">
+                How lovely is the morning in which I come to greet you
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="54">
+              <p class="spanish-line">
+                Venimos todos con gusto y placer a felicitarte
+              </p>
+              <p class="english-line">
+                We all come with joy and delight to celebrate you
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="64">
+              <p class="spanish-line">
+                El día en que tú naciste, nacieron todas las flores
+              </p>
+              <p class="english-line">
+                On the day that you were born, every flower came to life
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="72">
+              <p class="spanish-line">
+                En la pila del bautismo, cantaron los ruiseñores
+              </p>
+              <p class="english-line">
+                At the baptismal font, the nightingales began to sing
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="82">
+              <p class="spanish-line">
+                Ya viene amaneciendo ya la luz del día nos dio
+              </p>
+              <p class="english-line">
+                Dawn is breaking now, daylight has found us
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="91">
+              <p class="spanish-line">
+                Levántate de mañana, mira que ya amaneció
+              </p>
+              <p class="english-line">
+                Rise with the morning, look, the day has already begun
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="118">
+              <p class="spanish-line">
+                Si yo pudiera bajarte las estrellas y un lucero
+              </p>
+              <p class="english-line">
+                If I could bring down the stars and a morning star for you
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="206">
+              <p class="spanish-line">
+                para poder demostrarte lo mucho que yo te quiero
+              </p>
+              <p class="english-line">Just to show you how deeply I love you</p>
+            </div>
+
+            <div class="lyric-line" data-start="135">
+              <p class="spanish-line">
+                Con jazmines y flores este día quiero adornar
+              </p>
+              <p class="english-line">
+                With jasmine and flowers, I want to adorn this day for you
+              </p>
+            </div>
+
+            <div class="lyric-line" data-start="143">
+              <p class="spanish-line">
+                Hoy por ser día de tu santo te venimos a cantar
+              </p>
+              <p class="english-line">
+                Today, on your saint's day, we have come to sing for you
+              </p>
+            </div>
+          </div>
+
+          <div class="song-controls">
+            <label class="volume-control" aria-label="Music volume">
+              <span>Volume</span>
+              <input
+                id="volumeSlider"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.15"
+              />
+            </label>
+            <button class="small-control" id="prevLine" type="button">
+              Previous
+            </button>
+            <button class="small-control" id="nextLine" type="button">
+              Next
+            </button>
+            <button class="letter-btn" id="openLetter" type="button">
+              Open the letter, my love
+            </button>
+          </div>
+        </article>
+      </section>
+
+      <section
+        class="letter-section"
+        id="letterSection"
+        aria-label="Birthday letter"
+      >
+        <article class="letter-paper">
+          <h1 class="letter-title">My Love,</h1>
+
+          <div class="letter-body">
+            <p>My love,</p>
+
+            <p>
+              It is difficult to begin something like this: to open my heart and
+              offer it to you on a silver platter, using words that will never
+              come close to everything you make me feel. No language will ever
+              be enough to fully express how much I love you, how deeply I
+              appreciate you, and how grateful I am every single day to have you
+              by my side. Not even music, as universal and magical as it is, can
+              truly come close to what I feel for you.
+            </p>
+
+            <p>
+              I am grateful for this day. I will be grateful for it for the rest
+              of my life, and I will keep it safely in my heart, because you are
+              here, with me, and because I want to make you feel as loved as you
+              make me feel.
+            </p>
+
+            <p>So, happy birthday.</p>
+
+            <p>
+              Congratulations to you, for being such a magnificent and wonderful
+              woman. For being someone I admire, someone I look up to, my
+              eternal ray of sunshine.
+            </p>
+
+            <p>
+              I hope that today, all you do is celebrate. I hope you remember
+              that, out of all the people in the world, you are the most
+              important one, especially to yourself. Always remember to care for
+              your heart and your soul. Protect everything that makes you
+              unique, beautiful, and extraordinary. Be true to yourself. Love
+              yourself as much as the rest of us love you. Appreciate yourself.
+              Listen to yourself. Make your dreams come true, my heart.
+            </p>
+
+            <p>
+              Enjoy your birthday. Eat a lot of sweet things —or don’t, if you
+              don’t feel like it— and keep filling the world with warmth and
+              light simply by being in it.
+            </p>
+
+            <p class="signature">I love you.</p>
+
+            <div class="playlist-surprise">
+              <p class="playlist-kicker">One last little gift</p>
+              <h2>For the road ahead</h2>
+              <p>
+                I made you a playlist for every quiet morning, every soft
+                memory, and every little journey still waiting for us.
+              </p>
+
+              <a
+                class="qr-frame"
+                id="playlistLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open birthday playlist"
+              >
+                <img
+                  id="playlistQR"
+                  src=""
+                  alt="QR code that opens the birthday playlist"
+                />
+              </a>
+
+              <a
+                class="playlist-button"
+                id="playlistButton"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open the playlist
+              </a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="audio-note" id="audioNote">
+        I could not start the music automatically. Please tap the handle again
+        or check the audio file path.
+      </div>
+    </main>
+
+    <script>
+      const introWindow = document.getElementById("introWindow");
+      const songScene = document.getElementById("songScene");
+      const startExperience = document.getElementById("startExperience");
+      const audio = document.getElementById("birthdaySong");
+      const letterSong = document.getElementById("letterSong");
+      const audioNote = document.getElementById("audioNote");
+      const volumeSlider = document.getElementById("volumeSlider");
+      const introParticles = document.getElementById("introParticles");
+      const songParticles = document.getElementById("songParticles");
+      const playlistLink = document.getElementById("playlistLink");
+      const playlistButton = document.getElementById("playlistButton");
+      const playlistQR = document.getElementById("playlistQR");
+
+      // Replace this with your real Spotify / YouTube Music / Apple Music playlist link.
+      const playlistUrl =
+        "https://open.spotify.com/playlist/0yLlOUYm4CaKGWHipGgCBu?si=6bdfb326f5d44c3d";
+
+      playlistLink.href = playlistUrl;
+      playlistButton.href = playlistUrl;
+      playlistQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&data=${encodeURIComponent(playlistUrl)}`;
+
+      const lyricWrapper = document.getElementById("lyricWrapper");
+      const lines = Array.from(document.querySelectorAll(".lyric-line"));
+      const prevLine = document.getElementById("prevLine");
+      const nextLine = document.getElementById("nextLine");
+      const openLetter = document.getElementById("openLetter");
+      const letterSection = document.getElementById("letterSection");
+
+      let currentLine = -1;
+      let lyricSyncStarted = false;
+
+      const lyricTimings = lines.map((line, index) => ({
+        index,
+        start: Number(line.dataset.start || 0),
+      }));
+
+      audio.volume = Number(volumeSlider.value);
+      letterSong.volume = 0.12;
+
+      volumeSlider.addEventListener("input", () => {
+        audio.volume = Number(volumeSlider.value);
+      });
+
+      function randomBetween(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function createParticles(container, options) {
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < options.amount; i++) {
+          const particle = document.createElement("span");
+          const type =
+            options.hearts && Math.random() > 0.68 ? "heart" : "star";
+
+          particle.className = `particle ${type}`;
+          particle.style.setProperty("--x", `${randomBetween(2, 98)}%`);
+          particle.style.setProperty("--y", `${randomBetween(2, 98)}%`);
+          particle.style.setProperty(
+            "--size",
+            `${randomBetween(options.minSize, options.maxSize)}px`,
+          );
+          particle.style.setProperty(
+            "--opacity",
+            randomBetween(0.18, 0.75).toFixed(2),
+          );
+          particle.style.setProperty("--duration", `${randomBetween(5, 14)}s`);
+          particle.style.setProperty("--delay", `${randomBetween(-10, 0)}s`);
+          particle.style.setProperty("--blur", `${randomBetween(0, 1.2)}px`);
+          particle.style.setProperty(
+            "--drift-x",
+            `${randomBetween(-34, 34)}px`,
+          );
+          particle.style.setProperty(
+            "--drift-y",
+            `${randomBetween(-42, 42)}px`,
+          );
+          particle.style.setProperty(
+            "--rotate",
+            `${randomBetween(-25, 25)}deg`,
+          );
+
+          fragment.appendChild(particle);
+        }
+
+        container.appendChild(fragment);
+      }
+
+      createParticles(introParticles, {
+        amount: 72,
+        minSize: 1.5,
+        maxSize: 4.2,
+        hearts: false,
+      });
+      createParticles(songParticles, {
+        amount: 86,
+        minSize: 2.1,
+        maxSize: 7.5,
+        hearts: true,
+      });
+
+      function showEnglish(lineIndex) {
+        const english = lines[lineIndex].querySelector(".english-line");
+        setTimeout(() => {
+          english.classList.add("show");
+        }, 250);
+      }
+
+      function setLine(index) {
+        lines.forEach((line) => {
+          line.classList.remove("active");
+          const english = line.querySelector(".english-line");
+          english.classList.remove("show");
+        });
+
+        if (index < 0) {
+          currentLine = -1;
+          lyricWrapper.classList.add("waiting");
+          return;
+        }
+
+        lyricWrapper.classList.remove("waiting");
+        currentLine = Math.max(0, Math.min(index, lines.length - 1));
+        lines[currentLine].classList.add("active");
+        showEnglish(currentLine);
+
+        // The letter button should not appear when the lyrics end.
+        // It will appear only when the music finishes.
+      }
+
+      function getCurrentLyricIndex(currentTime) {
+        let activeIndex = -1;
+
+        for (const timing of lyricTimings) {
+          if (currentTime >= timing.start) {
+            activeIndex = timing.index;
+          } else {
+            break;
+          }
+        }
+
+        return activeIndex;
+      }
+
+      function syncLyricsToAudio() {
+        const syncedIndex = getCurrentLyricIndex(audio.currentTime);
+
+        if (syncedIndex !== currentLine) {
+          setLine(syncedIndex);
+        }
+      }
+
+      async function playBirthdaySong() {
+        try {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.volume = Number(volumeSlider.value);
+          audio.muted = false;
+          audio.load();
+          await audio.play();
+          return true;
+        } catch (error) {
+          console.error("Audio could not be played:", error);
+          audioNote.classList.add("visible");
+          setTimeout(() => audioNote.classList.remove("visible"), 5000);
+          return false;
+        }
+      }
+
+      startExperience.addEventListener("click", async () => {
+        introWindow.classList.add("open");
+        await playBirthdaySong();
+
+        setTimeout(() => {
+          introWindow.classList.add("hidden");
+          songScene.classList.add("visible");
+          lyricWrapper.classList.add("waiting");
+          setLine(-1);
+          lyricSyncStarted = true;
+          syncLyricsToAudio();
+        }, 1700);
+      });
+
+      prevLine.addEventListener("click", () => {
+        const targetIndex = currentLine <= 0 ? -1 : currentLine - 1;
+        audio.currentTime =
+          targetIndex < 0 ? 0 : lyricTimings[targetIndex].start;
+        setLine(targetIndex);
+      });
+
+      nextLine.addEventListener("click", () => {
+        const targetIndex = Math.min(lines.length - 1, currentLine + 1);
+        audio.currentTime = lyricTimings[targetIndex].start;
+        setLine(targetIndex);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        if (lyricSyncStarted) {
+          syncLyricsToAudio();
+        }
+      });
+
+      audio.addEventListener("seeking", () => {
+        if (lyricSyncStarted) {
+          syncLyricsToAudio();
+        }
+      });
+
+      audio.addEventListener("ended", () => {
+        openLetter.classList.add("visible");
+      });
+
+      openLetter.addEventListener("click", async () => {
+        audio.pause();
+        document.body.classList.add("letter-open");
+        songScene.classList.add("hidden-scene");
+        letterSection.classList.add("visible");
+
+        try {
+          letterSong.currentTime = 0;
+          letterSong.volume = 0.15;
+          await letterSong.play();
+        } catch (error) {
+          console.error("Letter background music could not be played:", error);
+        }
+
+        letterSection.scrollIntoView({ behavior: "smooth" });
+      });
+    </script>
+  </body>
+</html>
